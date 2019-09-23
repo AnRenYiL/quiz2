@@ -2,6 +2,27 @@
 <div>
     <h2><%= link_to idea.title, idea_path(idea) %></h2>
     <p><%= idea.description %></p>
+    <br>
+    By <%= idea.user&.full_name %>
+    <% @like = idea.likes.find_by(user: current_user)%>
+    <% if @like.present?  && can?(:destroy, @like) %>
+    <%= link_to(
+    "Unlike",
+    like_path(@like), 
+    class:"btn btn-danger ",
+    method: :delete
+    ) %>
+    <% else can?(:like, idea) %>
+    <%= link_to(
+            "Like",
+            idea_likes_path(idea),
+            class:"btn btn-success ",
+            method: :post
+    ) %>
+    <% end %>|
+    <small>
+    (<%= pluralize(idea.likes.count, "like") %>)
+    </small>
     <hr>
 </div>
 <% end %>
